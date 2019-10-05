@@ -18,11 +18,11 @@ module.exports = app => {
       const buildId = details_url.split('/').pop()
       app.log(buildId)
       const res = await axios.get(`https://api.travis-ci.com/v3/build/${buildId}`)
-      app.log(res.data)
-      const jobLog = await axios.get(`https://api.travis-ci.com/v3/job/${job[0].id}/log.txt`)
+      app.log(res.data.jobs)
+      // const jobLog = await axios.get(`https://api.travis-ci.com/v3/job/${job[0].id}/log.txt`)
       app.log(`Check run: ${id}`)
       app.log(`Repository: ${owner/repo}`)
-      app.log(jobLog)
+      // app.log(jobLog)
       return
     }
   })
