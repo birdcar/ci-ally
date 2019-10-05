@@ -16,9 +16,13 @@ module.exports = app => {
 
   app.on('check_run', async context => {
     app.log("I'm responding to check_run")
+    app.log(context.repo())
+    app.log(context.payload)
   })
 
   app.on('check_suite', async context => {
     app.log("I'm responding to check_suite")
+    app.log(context.repo())
+    app.log(context.payload)
   })
 }
