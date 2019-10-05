@@ -7,7 +7,7 @@ const axios = require('axios')
 module.exports = app => {
   app.log('Yay, the app was loaded!')
 
-  app.on('check_run', async context => {
+  app.on('check_run.completed', async context => {
     app.log("I'm responding to check_run")
     const { check_run: { id, details_url, conclusion } } = context.payload
     const { owner, repo } = context.repo()
