@@ -7,14 +7,7 @@ module.exports = app => {
 
   app.on('check_run', async context => {
     app.log("I'm responding to check_run")
-    const { owner, repo } = context.repo
-    const { id: check_run_id } = context.check_run.id
-    const annotations = context.github.checks.listAnnotations({
-      owner,
-      repo,
-      check_run_id
-    })
-    app.log(annotations)
+    app.log(context)
   })
 
   app.on('check_suite', async context => {
