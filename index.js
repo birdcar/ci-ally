@@ -46,7 +46,8 @@ function parseLog(jobLog) {
  * @param {import('probot').Application} app
  */
 module.exports = app => {
-  app.on('check_run.completed', async context => {
+  app.on('check_run.failure', async context => {
+    app.log('This only runs once')
     // Destructure necessary data from the payload
     const {
       check_run: { details_url: travisBuild, conclusion, name: checkName }
@@ -54,7 +55,7 @@ module.exports = app => {
 
     // Fail fast if the specific check_run isn't Travis CI - Pull Request
     if (checkName !== 'Travis CI - Pull Request') {
-      return false;
+      return null;
     }
 
     // Only take action if the conclusion of the Pull Request check is 'failure'
@@ -66,7 +67,7 @@ module.exports = app => {
         return null;
       }
 
-      app.log(buildResults);
+      app.log(buildResults)
     }
   });
 };
