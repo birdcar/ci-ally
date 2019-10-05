@@ -6,7 +6,8 @@ const axios = require('axios')
  */
 module.exports = app => {
   app.on('check_run.completed', async context => {
-    const { check_run: { details_url, conclusion } } = context.payload
+    const { check_run: { details_url, conclusion }, app: { slug: integrationSlug } } = context.payload
+    app.log(integrationSlug)
     app.log("I ran when I wasn't supposed to")
     if (conclusion === 'failure') {
       const buildId = details_url.split('/').pop()
