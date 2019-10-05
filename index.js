@@ -9,10 +9,10 @@ module.exports = app => {
 
   app.on('check_run', async context => {
     app.log("I'm responding to check_run")
-    const { check_run: { id, details_url, conclusion }, app } = context.payload
+    const { check_run: { id, details_url, conclusion } } = context.payload
     const { owner, repo } = context.repo()
 
-    if (app.slug === 'travis-ci' && conclusion === 'failed') {
+    if (conclusion === 'failed') {
       const buildId = details_url.split('/').pop()
       const { jobs: job } = await axios.get(`https://api.travis-ci.com/v3/build/${buildId}`)
       const jobLog = await axios.get(`https://api.travis-ci.com/v3/job/${job[0].id}/log.txt`)
