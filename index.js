@@ -14,7 +14,7 @@ module.exports = app => {
     app.log(id)
     app.log(details_url)
     app.log(conclusion)
-    if (conclusion === 'failed') {
+    if (conclusion === 'failure') {
       const buildId = details_url.split('/').pop()
       app.log(buildId)
       const { jobs: job } = await axios.get(`https://api.travis-ci.com/v3/build/${buildId}`)
