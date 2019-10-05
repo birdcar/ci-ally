@@ -22,7 +22,7 @@ module.exports = app => {
       const { data: jobLog } = await axios.get(`https://api.travis-ci.com/v3/job/${jobId}/log.txt`)
       app.log(`Check run: ${id}`)
       app.log(`Repository: ${owner}/${repo}`)
-      app.log(jobLog)
+      console.log(jobLog)
       return
     }
   })
