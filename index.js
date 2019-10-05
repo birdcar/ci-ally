@@ -22,8 +22,14 @@ module.exports = app => {
       const { data: jobLog } = await axios.get(`https://api.travis-ci.com/v3/job/${jobId}/log.txt`)
       app.log(`Check run: ${id}`)
       app.log(`Repository: ${owner}/${repo}`)
-      console.log(jobLog)
-      return
+      const reg = /\[0K\$\snpm\stest(?:\r\n|\n)*([\s\S]+)[\r\n]+.*Test failed\./g
+      const result = reg.exec(jobLog)
+      if (!result) {
+        return false
+      }
+      let content = result[1].trim()
+      const obj = { content, command: 'npm test' }
+      app.log(obj)
     }
   })
 }
