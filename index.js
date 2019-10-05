@@ -7,7 +7,7 @@ const axios = require('axios')
 module.exports = app => {
   app.on('check_run.completed', async context => {
     const { check_run: { details_url, conclusion } } = context.payload
-
+    app.log("I ran when I wasn't supposed to")
     if (conclusion === 'failure') {
       const buildId = details_url.split('/').pop()
       const { data } = await axios.get(`https://api.travis-ci.com/v3/build/${buildId}`)
