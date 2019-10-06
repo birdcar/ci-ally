@@ -18,12 +18,12 @@ module.exports = app => {
     }
 
     const rawLog = await getBuildLog(travisBuild);
-    const buildResults = parseLog(rawLog);
+    const buildLog = parseLog(rawLog);
 
     if (!buildResults) {
       return null;
     }
-    
-    return postPRComments(pull_requests, context, app.log);
+
+    return postPRComments(context, pull_requests, buildLog, app.log);
   });
 };
