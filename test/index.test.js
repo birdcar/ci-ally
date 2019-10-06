@@ -33,8 +33,8 @@ describe('My Probot app', () => {
         return true
       })
       .reply(200)
-
     // Receive a webhook event
+    // throw new Error('This is a purposefully thrown error')
     await probot.receive({ name: 'issues', payload })
   })
 })
