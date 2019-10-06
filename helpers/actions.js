@@ -13,7 +13,7 @@ exports.postPRComments = (context, pull_requests, buildLog, logger) => {
 
   pull_requests.forEach(pull => {
     const { number, head: { sha } } = pull;
-    const body = compiledBody({ buildLog, sha });
+    const body = compiledBody({ buildLog, sha: sha.substring(0,8) });
 
     context.github.issues.createComment(context.repo({ number, body }))
       .then(res =>logger.trace(res, 'Pull Request comment successfully posted'))

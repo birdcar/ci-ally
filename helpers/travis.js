@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-exports.getBuildLog = async (buildUrl) => {
+exports.getBuildLog = async buildUrl => {
   // Pull the Travis build ID off of the buildUrl
   const buildId = buildUrl.split('/').pop();
 
@@ -11,7 +11,7 @@ exports.getBuildLog = async (buildUrl) => {
 
   // Grab the ID of the first job in the jobs array
   // @todo Look into handling more than one job
-  // @body Currently, the app will only get the logs for the first job in the payload 
+  // @body Currently, the app will only get the logs for the first job in the payload
   const jobId = data.jobs[0].id;
 
   // Request the log for that specific job ID
@@ -21,9 +21,9 @@ exports.getBuildLog = async (buildUrl) => {
 
   // Return the raw text log
   return jobLog;
-}
+};
 
-exports.parseLog = (jobLog) => {
+exports.parseLog = jobLog => {
   // Parse the job log for npm test output
   const re = /\[0K\$\snpm\stest(?:\r\n|\n)*([\s\S]+)[\r\n]+.*Test failed\.\s+See above for more details\./g;
   const match = re.exec(jobLog)[1].trim();
@@ -38,4 +38,4 @@ exports.parseLog = (jobLog) => {
 
   // Return the build log
   return output;
-}
+};
