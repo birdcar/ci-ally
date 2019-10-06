@@ -6,11 +6,10 @@
  * @param logger - The Probot logger
  */
 exports.postPRComments = (pull_requests, context, logger) => {
-  const { repo, github } = context
   const body = 'This is a second test comment body.';
 
   pull_requests.forEach(({ number }) => {
-    github.issues.createComment(repo({ number, body }))
+    context.github.issues.createComment(context.repo({ number, body }))
       .then(res =>logger.debug(res, 'Pull Request comment successfully posted'))
       .catch(err => logger.error(err, 'Pull Request comment failed to post'));
   });
