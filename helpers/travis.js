@@ -26,15 +26,15 @@ exports.getBuildLog = async (buildUrl) => {
 exports.parseLog = (jobLog) => {
   // Parse the job log for npm test output
   const re = /\[0K\$\snpm\stest(?:\r\n|\n)*([\s\S]+)[\r\n]+.*Test failed\.\s+See above for more details\./g;
-  const match = re.exec(jobLog);
+  const match = re.exec(jobLog)[1].trim();
 
   // If no match is found, return false
   if (!match) {
     return false;
   }
 
-  // Remove unicode and extra whitespace from the output text
-  const output = match[1].replace(/[^\x00-\x7F]/g, "").trim();
+  // Strip ANSI codes from the matched logs
+  const output = match.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 
   // Return the build log
   return output;
