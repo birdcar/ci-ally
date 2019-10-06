@@ -20,7 +20,7 @@ module.exports = app => {
     const rawLog = await getBuildLog(travisBuild);
     const buildLog = parseLog(rawLog);
 
-    if (!buildResults) {
+    if (!buildLog) {
       return null;
     }
 
