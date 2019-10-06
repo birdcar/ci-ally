@@ -1,55 +1,5 @@
-const axios = require('axios');
-
-async function getBuildLog(buildUrl) {
-  // Pull the Travis build ID off of the buildUrl
-  const buildId = buildUrl.split('/').pop();
-
-  // Get the build data from Travis' API
-  const { data } = await axios.get(
-    `https://api.travis-ci.com/v3/build/${buildId}`
-  );
-
-  // Grab the ID of the first job in the jobs array
-  // @todo Look into handling more than one job
-  // @body Currently, the app will only get the logs for the first job in the payload 
-  const jobId = data.jobs[0].id;
-
-  // Request the log for that specific job ID
-  const { data: jobLog } = await axios.get(
-    `https://api.travis-ci.com/v3/job/${jobId}/log.txt`
-  );
-
-  // Return the raw text log
-  return jobLog;
-}
-
-function parseLog(jobLog) {
-  // parse the job log for npm test output
-  const reg = /\[0K\$\snpm\stest(?:\r\n|\n)*([\s\S]+)[\r\n]+.*Test failed\./g;
-  const match = reg.exec(jobLog);
-
-  // If no match is found, return false
-  if (!match) {
-    return false;
-  }
-
-  // Trim the output
-  const errors = match[1].trim();
-
-  // Return a new object
-  return {
-    errors,
-    command: 'npm test'
-  };
-}
-
-function postPRComments({ pull_requests, context }) {
-  const body = 'This is a test comment body. This will be a function soon'
-  pull_requests.forEach(({ number }) => {
-    context.github.issues.createComment(context.repo({ number, body }))
-      .then(res => console.log(res))
-  })
-}
+const { getBuildLog, parseLog } = require('./helpers/travis');
+const { postPRComments } = require('./helpers/actions')
 
 /**
  * This is the main entrypoint to your Probot app
@@ -62,7 +12,7 @@ module.exports = app => {
       check_run: { details_url: travisBuild, conclusion, name: checkName, pull_requests },
     } = context.payload;
 
-    // Fail fast if the conclusion isn't failure or the specific check isn't 'Travis CI - Pull Request'
+    // Exit fast if the conclusion isn't failure or the specific check isn't 'Travis CI - Pull Request'
     if (conclusion !== 'failure' || checkName !== 'Travis CI - Pull Request') {
       return null;
     }
@@ -74,9 +24,6 @@ module.exports = app => {
       return null;
     }
     
-    return postPRComments({
-      pull_requests,
-      context
-    });
+    return postPRComments(pull_requests, context, app.log);
   });
 };
