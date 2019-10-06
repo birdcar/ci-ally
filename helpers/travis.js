@@ -34,11 +34,8 @@ exports.parseLog = (jobLog) => {
   }
 
   // Trim the output
-  const errors = match[1].trim();
+  const output = match[1].trim();
 
-  // Return a new "build" object
-  return {
-    errors,
-    command: 'npm test'
-  };
+  // Return the build log
+  return output
 }
