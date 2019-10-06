@@ -1,5 +1,4 @@
-const { handlebars } = require('hbs');
-const responseTemplate = require('./responseTemplate');
+const genCommentBody = require('./genCommentBody');
 
 /**
  * Post a comment containing the build log on every Pull Request containing the failed commit
@@ -9,11 +8,9 @@ const responseTemplate = require('./responseTemplate');
  * @param logger - The Probot logger
  */
 exports.postPRComments = (context, pull_requests, buildLog, logger) => {
-  const compiledBody = handlebars.compile(responseTemplate);
-
   pull_requests.forEach(pull => {
     const { number, head: { sha } } = pull;
-    const body = compiledBody({ buildLog, sha: sha.substring(0,8) });
+    const body = genCommentBody(sha, buildLog);
 
     context.github.issues.createComment(context.repo({ number, body }))
       .then(res =>logger.trace(res, 'Pull Request comment successfully posted'))
