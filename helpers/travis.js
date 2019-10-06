@@ -33,9 +33,9 @@ exports.parseLog = (jobLog) => {
     return false;
   }
 
-  // Trim the output
-  const output = match[1].trim();
+  // Remove unicode and extra whitespace from the output text
+  const output = match[1].replace(/[^\x00-\x7F]/g, "").trim();
 
   // Return the build log
-  return output
+  return output;
 }
