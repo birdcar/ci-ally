@@ -1,41 +1,59 @@
-const nock = require('nock')
-// Requiring our app implementation
-const myProbotApp = require('..')
+// Node dependencies
+const fs = require('fs')
+const path = require('path')
+
+// Probot dependencies
 const { Probot } = require('probot')
-// Requiring our fixtures
-const payload = require('./fixtures/issues.opened')
-const issueCreatedBody = { body: 'Thanks for opening this issue!' }
+const nock = require('nock')
+
+// ci-ally implementation
+const ciAlly = require('..')
+
+// Fixtures
+const failurePayload = require('./fixtures/check_run.completed-failure.json')
+const prCommentBody = require('./fixtures/prComment.json')
+const buildInfo = require('./fixtures/travis/buildInfo.json')
+const rawLog = fs.readFileSync(path.join(__dirname, 'fixtures', 'travis', 'log.txt'), 'utf8')
 
 nock.disableNetConnect()
 
-describe('My Probot app', () => {
+describe('ci-ally', () => {
   let probot
 
   beforeEach(() => {
     probot = new Probot({})
     // Load our app into probot
-    const app = probot.load(myProbotApp)
+    const app = probot.load(ciAlly)
 
     // just return a test token
-    app.app = () => 'test'
+    app.app = () => 'test-token'
   })
 
-  test('creates a comment when an issue is opened', async () => {
+  test('Responds to a failed check_run by createing a PR comment', async () => {
     // Test that we correctly return a test token
     nock('https://api.github.com')
-      .post('/app/installations/2/access_tokens')
-      .reply(200, { token: 'test' })
+      .post('/app/installations/1/access_tokens')
+      .reply(200, { token: 'test-token' })
+
+    // Catch requests to travis for the raw build log
+    nock('https://api.travis-ci.com')
+      .get('/v3/build/130588813')
+      .reply(200, buildInfo)
+
+    nock('https://api.travis-ci.com')
+      .get('/v3/job/242559998/log.txt')
+      .reply(200, rawLog)
 
     // Test that a comment is posted
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/issues/1/comments', (body) => {
-        expect(body).toMatchObject(issueCreatedBody)
+      .post('/repos/nickcannariato/ci-ally/issues/4/comments', body => {
+        expect(body).toMatchObject(prCommentBody)
         return true
       })
-      .reply(200)
+      .reply(201)
+
     // Receive a webhook event
-    throw new Error('This is a purposefully thrown error')
-    await probot.receive({ name: 'issues', payload })
+    await probot.receive({ name: 'check_run.completed', payload: failurePayload })
   })
 })
 
