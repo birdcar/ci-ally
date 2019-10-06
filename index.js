@@ -58,8 +58,7 @@ module.exports = app => {
   app.on('check_run.completed', async context => {
     // Destructure necessary data from the payload
     const {
-      check_run: { details_url: travisBuild, conclusion, name: checkName },
-      pull_requests
+      check_run: { details_url: travisBuild, conclusion, name: checkName, pull_requests },
     } = context.payload;
 
     // Fail fast if the conclusion isn't failure or the specific check isn't 'Travis CI - Pull Request'
@@ -73,7 +72,7 @@ module.exports = app => {
     if (!buildResults) {
       return null;
     }
-
+    
     return postPRComments({
       pull_requests,
       context
