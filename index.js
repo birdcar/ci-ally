@@ -1,10 +1,6 @@
 const { getBuildLog, parseLog } = require('./helpers/travis');
 const { postPRComments } = require('./helpers/actions')
 
-/**
- * This is the main entrypoint to your Probot app
- * @param {import('probot').Application} app
- */
 module.exports = app => {
   app.on('check_run.completed', async context => {
     // Destructure necessary data from the payload
