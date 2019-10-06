@@ -10,6 +10,8 @@ async function getBuildLog(buildUrl) {
   );
 
   // Grab the ID of the first job in the jobs array
+  // @todo Look into handling more than one job
+  // @body Currently, the app will only get the logs for the first job in the payload 
   const jobId = data.jobs[0].id;
 
   // Request the log for that specific job ID
@@ -42,11 +44,10 @@ function parseLog(jobLog) {
 }
 
 function postPRComments({ pull_requests, context }) {
+  const body = 'This is a test comment body. This will be a function soon'
   pull_requests.forEach(({ number }) => {
-    context.github.issues.createComment({
-      number,
-      body: 'This worked'
-    }).then(res => console.log(res))
+    context.github.issues.createComment(context.repo({ number, body }))
+      .then(res => console.log(res))
   })
 }
 
