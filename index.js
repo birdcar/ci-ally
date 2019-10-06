@@ -8,6 +8,8 @@ const { postPRComments } = require('./helpers/actions')
 module.exports = app => {
   app.on('check_run.completed', async context => {
     // Destructure necessary data from the payload
+    app.log(context)
+    app.log(context.payload)
     const {
       check_run: { details_url: travisBuild, conclusion, name: checkName, pull_requests },
     } = context.payload;

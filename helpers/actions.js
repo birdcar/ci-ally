@@ -10,7 +10,7 @@ exports.postPRComments = (pull_requests, { repo, github: { issues } }, logger) =
 
   pull_requests.forEach(({ number }) => {
     issues.createComment(repo({ number, body }))
-      .then(res =>logger.trace(res, 'Pull Request comment successfully posted'))
-      .catch(e => logger.error(e, 'Pull Request comment failed to post'));
+      .then(res =>logger.debug(res, 'Pull Request comment successfully posted'))
+      .catch(err => logger.error(err, 'Pull Request comment failed to post'));
   });
 };
