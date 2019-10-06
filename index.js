@@ -41,33 +41,42 @@ function parseLog(jobLog) {
   };
 }
 
+function postPRComments({ pull_requests, context }) {
+  pull_requests.forEach(({ number }) => {
+    context.github.issues.createComment({
+      number,
+      body: 'This worked'
+    }).then(res => console.log(res))
+  })
+}
+
 /**
  * This is the main entrypoint to your Probot app
  * @param {import('probot').Application} app
  */
 module.exports = app => {
-  app.on('check_run.failure', async context => {
-    app.log('This only runs once')
+  app.on('check_run.completed', async context => {
     // Destructure necessary data from the payload
     const {
-      check_run: { details_url: travisBuild, conclusion, name: checkName }
+      check_run: { details_url: travisBuild, conclusion, name: checkName },
+      pull_requests
     } = context.payload;
 
-    // Fail fast if the specific check_run isn't Travis CI - Pull Request
-    if (checkName !== 'Travis CI - Pull Request') {
+    // Fail fast if the conclusion isn't failure or the specific check isn't 'Travis CI - Pull Request'
+    if (conclusion !== 'failure' || checkName !== 'Travis CI - Pull Request') {
       return null;
     }
 
-    // Only take action if the conclusion of the Pull Request check is 'failure'
-    if (conclusion === 'failure') {
-      const rawLog = await getBuildLog(travisBuild);
-      const buildResults = parseLog(rawLog);
+    const rawLog = await getBuildLog(travisBuild);
+    const buildResults = parseLog(rawLog);
 
-      if (!buildResults) {
-        return null;
-      }
-
-      app.log(buildResults)
+    if (!buildResults) {
+      return null;
     }
+
+    return postPRComments({
+      pull_requests,
+      context
+    });
   });
 };
