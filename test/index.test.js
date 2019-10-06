@@ -34,7 +34,7 @@ describe('My Probot app', () => {
       })
       .reply(200)
     // Receive a webhook event
-    // throw new Error('This is a purposefully thrown error')
+    throw new Error('This is a purposefully thrown error')
     await probot.receive({ name: 'issues', payload })
   })
 })
