@@ -33,7 +33,6 @@ describe('My Probot app', () => {
         return true
       })
       .reply(200)
-    throw new Error('This will trigger a broken build')
     // Receive a webhook event
     await probot.receive({ name: 'issues', payload })
   })

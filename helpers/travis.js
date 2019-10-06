@@ -40,9 +40,9 @@ exports.parseLog = jobLog => {
   const re = /\[0K\$\snpm\stest(?:\r\n|\n)*([\s\S]+)[\r\n]+.*Ran all test suites/g;
   const match = re.exec(jobLog)[1].trim();
 
-  // If no match is found, return false
+  // If no match is found, return null
   if (!match) {
-    return false;
+    return null;
   }
 
   // Strip ANSI codes from the matched logs
