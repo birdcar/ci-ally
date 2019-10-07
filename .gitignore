@@ -95,4 +95,7 @@ public/
 # DynamoDB Local files
 .dynamodb/
 
+# VSCode files
+.vscode/
+
 # End of https://www.gitignore.io/api/node
