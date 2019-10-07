@@ -1,0 +1,65 @@
+{
+  "@type": "build",
+  "@href": "/v3/build/130588813",
+  "@representation": "standard",
+  "@permissions": {
+    "read": true,
+    "cancel": false,
+    "restart": false
+  },
+  "id": 130588813,
+  "number": "110",
+  "state": "failed",
+  "duration": 67,
+  "event_type": "pull_request",
+  "previous_state": "passed",
+  "pull_request_title": "Add test suite",
+  "pull_request_number": 4,
+  "started_at": "2019-10-06T19:26:11Z",
+  "finished_at": "2019-10-06T19:27:18Z",
+  "private": false,
+  "repository": {
+    "@type": "repository",
+    "@href": "/v3/repo/11005563",
+    "@representation": "minimal",
+    "id": 11005563,
+    "name": "ci-ally",
+    "slug": "nickcannariato/ci-ally"
+  },
+  "branch": {
+    "@type": "branch",
+    "@href": "/v3/repo/11005563/branch/master",
+    "@representation": "minimal",
+    "name": "master"
+  },
+  "tag": null,
+  "commit": {
+    "@type": "commit",
+    "@representation": "minimal",
+    "id": 251198004,
+    "sha": "6c35dc10b5d24d11f60b9ada1c7a4887a936268c",
+    "ref": "refs/pull/4/merge",
+    "message": ":bug: Remove outdated reference from .travis.yml",
+    "compare_url": "https://github.com/nickcannariato/ci-ally/pull/4",
+    "committed_at": "2019-10-06T19:24:18Z"
+  },
+  "jobs": [
+    {
+      "@type": "job",
+      "@href": "/v3/job/242559998",
+      "@representation": "minimal",
+      "id": 242559998
+    }
+  ],
+  "stages": [
+
+  ],
+  "created_by": {
+    "@type": "user",
+    "@href": "/v3/user/338369",
+    "@representation": "minimal",
+    "id": 338369,
+    "login": "nickcannariato"
+  },
+  "updated_at": "2019-10-06T19:27:18.764Z"
+}

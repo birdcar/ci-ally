@@ -1,3 +1,0 @@
-describe('actions', () => {
-  it('postPRComments', () => {})
-})
