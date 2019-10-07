@@ -38,16 +38,17 @@ describe('ci-ally', () => {
       .post('/app/installations/1/access_tokens')
       .reply(200, { token: 'test-token' })
 
-    // Catch requests to travis for the raw build log
+    // Catch requests to travis for the build info
     nock('https://api.travis-ci.com')
       .get('/v3/build/130588813')
       .reply(200, buildInfo)
 
+    // Catch requests to Travis for the raw job log
     nock('https://api.travis-ci.com')
       .get('/v3/job/242559998/log.txt')
       .reply(200, rawLog)
 
-    // Test that a comment is posted
+    // "post" a PR comment
     nock('https://api.github.com')
       .post('/repos/nickcannariato/ci-ally/issues/4/comments', body => {
         expect(body).toMatchObject(prCommentBody)
@@ -81,4 +82,3 @@ describe('helpers/travis.js', () => {
     expect(parsedLog).toEqual(rawTestOutput)
   })
 })
-
