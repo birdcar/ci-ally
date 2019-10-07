@@ -1,0 +1,26 @@
+> ci-ally@1.0.0 test /home/travis/build/nickcannariato/ci-ally
+> jest && standard
+
+ FAIL  test/index.test.js
+  â— My Probot app â€º creates a comment when an issue is opened
+
+    This is a purposefully thrown error
+
+      35 |       .reply(200)
+      36 |     // Receive a webhook event
+    > 37 |     throw new Error('This is a purposefully thrown error')
+         |           ^
+      38 |     await probot.receive({ name: 'issues', payload })
+      39 |   })
+      40 | })
+
+      at Object.test (test/index.test.js:37:11)
+
+ PASS  test/helpers/travis.test.js
+ PASS  test/helpers/actions.test.js
+ PASS  test/helpers/genCommentBody.test.js
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 4 passed, 5 total
+Snapshots:   0 total
+Time:        1.923s
