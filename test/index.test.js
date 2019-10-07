@@ -8,12 +8,15 @@ const nock = require('nock')
 
 // ci-ally implementation
 const ciAlly = require('..')
+const { getBuildLog, parseLog } = require('../helpers/travis')
+// const getCommentBody = require('../helpers/genCommentBody')
 
 // Fixtures
 const failurePayload = require('./fixtures/check_run.completed-failure.json')
-const prCommentBody = require('./fixtures/prComment.json')
+const prCommentBody = require('./fixtures/prCommentBody.json')
 const buildInfo = require('./fixtures/travis/buildInfo.json')
 const rawLog = fs.readFileSync(path.join(__dirname, 'fixtures', 'travis', 'log.txt'), 'utf8')
+const rawTestOutput = fs.readFileSync(path.join(__dirname, 'fixtures', 'travis', 'parsedLog.txt'), 'utf8')
 
 nock.disableNetConnect()
 
@@ -57,8 +60,25 @@ describe('ci-ally', () => {
   })
 })
 
-// For more information about testing with Jest see:
-// https://facebook.github.io/jest/
+describe('helpers/travis.js', () => {
+  it('Requests appropriate build log from Travis', async () => {
+    const buildUrl = 'https://api.travis-ci.com/v3/build/130588813'
 
-// For more information about testing with Nock see:
-// https://github.com/nock/nock
+    nock('https://api.travis-ci.com')
+      .get('/v3/build/130588813')
+      .reply(200, buildInfo)
+
+    nock('https://api.travis-ci.com')
+      .get('/v3/job/242559998/log.txt')
+      .reply(200, rawLog)
+
+    expect(getBuildLog(buildUrl)).resolves.toEqual(rawLog)
+  })
+
+  it('Extracts test output from build log', () => {
+    const parsedLog = parseLog(rawLog)
+
+    expect(parsedLog).toEqual(rawTestOutput)
+  })
+})
+
